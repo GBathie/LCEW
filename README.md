@@ -1,5 +1,8 @@
 # Longest common extension in strings with wildcards (LCEW)
 
+Library for computing longest common extension in strings with wildcards.
+Refer to the article by [Bathie, Charalampopoulos and Starikovskaya]
+for more details on the implementation and data structures used.
 
 ## Building the project
 
@@ -20,8 +23,3 @@ There are the
 - `ukkonen.{c,h}pp`: Ukkonen's algorithm to build suffix trees, used to compute suffix and LCP arrays.
 - `lce.hpp`: data structure for (usual) longest common extension queries.
 - `main.cpp`: entry point and test functions.
-
-
-
-
-## References
