@@ -30,14 +30,13 @@ void convert_to_string(vector<int> &v, const SparseBoolMatrix &a, bool lhs = tru
     v.insert(v.end(), res.begin(), res.end());
 }
 
-
 SparseBoolMatrix matrix_mult(const SparseBoolMatrix &a, const SparseBoolMatrix &b)
 {
     vector<int> txt;
     convert_to_string(txt, a, true);
     convert_to_string(txt, b, false);
     int n = a.n;
-    int t = n * sqrt((a.entries.size() + b.entries.size()) / n);
+    int t = 100; // n * sqrt((a.entries.size() + b.entries.size()) / n);
     Lcew ds(txt, t);
 
     SparseBoolMatrix res;

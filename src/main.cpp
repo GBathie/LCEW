@@ -137,13 +137,13 @@ double test_mm(size_t n, double p, RNG &rng)
 
     auto check_dense = mat_mul(a, b);
     SparseBoolMatrix check = SparseBoolMatrix::from_dense(check_dense);
-            
+
     chrono::steady_clock sc;
     auto start = sc.now();
     SparseBoolMatrix res = matrix_mult(a_s, b_s);
     auto end = sc.now();
-    auto time_rep = static_cast<chrono::duration<double>> (end - start).count();
-    
+    auto time_rep = static_cast<chrono::duration<double>>(end - start).count();
+
     assert(res == check);
 
     return time_rep;
@@ -156,23 +156,31 @@ size_t nb_rep(9);
  */
 void run_tests(size_t max_size, size_t step)
 {
-    for (float p = 0.1; p <= 1; p += 0.1) {
-        string name_file = "results_"+to_string(p)+".csv";
+    random_device rd;
+    mt19937 rng(rd());
+    // for (float p = 0.1; p <= 1; p += 0.1)
+    float p = 40;
+    {
+        string name_file = "results_" + to_string(p) + ".csv";
         ofstream outFile;
         outFile.open(name_file);
 
-        if (outFile.is_open()) {
-            for (size_t n = step; n <= max_size; n+= step) {
-                for(size_t i = 0; i <= nb_rep; i++) {
+        if (outFile.is_open())
+        {
+            for (size_t n = step; n <= max_size; n += step)
+            {
+                for (size_t i = 0; i <= nb_rep; i++)
+                {
                     cout << n << "," << p << "," << i << endl;
-                    random_device rd;
-                    mt19937 rng(rd());
-                    double time_total = test_mm(n, p, rng);
+
+                    double time_total = test_mm(n, p / (n * n), rng);
                     outFile << n << "," << p << "," << time_total << endl;
                 }
             }
             outFile.close();
-        } else {
+        }
+        else
+        {
             cout << "Unable to open files: " << name_file << endl;
         }
     }
@@ -180,7 +188,11 @@ void run_tests(size_t max_size, size_t step)
 
 int main()
 {
-    size_t max_size = 2000;
+    // random_device rd;
+    // mt19937 rng(rd());
+    // test_pm_wc_jump(100, rng);
+
+    size_t max_size = 500;
     size_t step = 100;
 
     run_tests(max_size, step);

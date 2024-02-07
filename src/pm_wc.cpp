@@ -94,6 +94,49 @@ vector<bool> pm_wc_naive(vector<int> &p, vector<int> &t, unordered_set<int> &wc)
     return res;
 }
 
+vector<bool> pm_wc_jump(
+    int p_start, int m,
+    vector<int> &t, unordered_set<int> &wc,
+    vector<int> &next_tr)
+{
+    int n = t.size();
+
+    auto matches = [&](int a, int b) -> bool
+    {
+        return a == b || wc.contains(a) || wc.contains(b);
+    };
+
+    auto matches_substr = [&](int i) -> bool
+    {
+        for (int j = 0; j < m; j++)
+        {
+            if (i + j >= n)
+                return false;
+
+            if (wc.contains(t[p_start + j]))
+                j += next_tr[p_start + j];
+
+            if (i + j >= n)
+                return false;
+
+            if (wc.contains(t[i + j]))
+                j += next_tr[i + j];
+
+            if (!matches(t[p_start + j], t[i + j]))
+                return false;
+        }
+        return true;
+    };
+
+    vector<bool> res(n, false);
+    for (int i = 0; i < n; i++)
+    {
+        res[i] = matches_substr(i);
+    }
+
+    return res;
+}
+
 void check_pm_wc(vector<int> &p, vector<int> &t)
 {
     unordered_set<int> wc = {'#'};
@@ -124,5 +167,46 @@ void test_pm_wc(int it, mt19937 &rng)
         vector<int> p = random_str(10, rng);
         vector<int> t = random_str(100, rng);
         check_pm_wc(p, t);
+    }
+}
+
+vector<int> get_next_tr(const vector<int> &t, unordered_set<int> &wc)
+{
+    int n = t.size();
+    vector<int> res(n, 0);
+    res[n - 1] = 0;
+    for (int i = n - 2; i > 0; i--)
+    {
+        if (wc.contains(t[i - 1]) && !wc.contains(t[i]))
+            res[i] = 0;
+        else
+            res[i] = res[i + 1] - 1;
+    }
+
+    if (n > 0)
+        res[0] = res[1] + 1;
+
+    return res;
+}
+
+void check_pm_wc_jump(int p_start, int l, vector<int> &t)
+{
+    unordered_set<int> wc = {'#'};
+    vector<int> p(t.begin() + p_start, t.begin() + p_start + l);
+    auto next_tr = get_next_tr(t, wc);
+    auto res_exact = pm_wc_naive(p, t, wc);
+    auto res_fft = pm_wc_jump(p_start, l, t, wc, next_tr);
+    assert(res_exact == res_fft);
+}
+
+void test_pm_wc_jump(int it, mt19937 &rng)
+{
+    for (int i = 0; i < it; i++)
+    {
+        vector<int> t = random_str(100, rng);
+        for (int p_start = 0; p_start < 90; p_start++)
+        {
+            check_pm_wc_jump(p_start, 10, t);
+        }
     }
 }
