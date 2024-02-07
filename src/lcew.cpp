@@ -136,7 +136,8 @@ Lcew::Lcew(vector<int> txt, int t, vector<int> wc) : text(txt), sa(txt)
         sel_rank[selected_pos[i]] = i;
     }
 
-    jump = compute_jump2(text, wildcards, selected_pos, next_tr);
+    jump = compute_jump(text, wildcards, selected_pos);
+    // jump = compute_jump2(text, wildcards, selected_pos, next_tr);
 }
 
 int Lcew::next_selected_or_mism(int i, int j) const

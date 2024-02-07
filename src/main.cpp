@@ -120,9 +120,9 @@ vector<vector<bool>> mat_mul(vector<vector<bool>> &a, vector<vector<bool>> &b)
 {
     size_t n = a.size();
     vector<vector<bool>> res(n, vector<bool>(n, false));
-    for (size_t k = 0; k < n; k++)
-        for (size_t i = 0; i < n; i++)
-            for (size_t j = 0; j < n; j++)
+    for (size_t i = 0; i < n; i++)
+        for (size_t j = 0; j < n; j++)
+            for (size_t k = 0; k < n; k++)
                 res[i][j] = res[i][j] || (a[i][k] && b[k][j]);
     return res;
 }
@@ -135,21 +135,25 @@ double test_mm(size_t n, double p, RNG &rng)
     SparseBoolMatrix a_s = SparseBoolMatrix::from_dense(a);
     SparseBoolMatrix b_s = SparseBoolMatrix::from_dense(b);
 
-    auto check_dense = mat_mul(a, b);
-    SparseBoolMatrix check = SparseBoolMatrix::from_dense(check_dense);
-
     chrono::steady_clock sc;
     auto start = sc.now();
-    SparseBoolMatrix res = matrix_mult(a_s, b_s);
+    auto check_dense = mat_mul(a, b);
     auto end = sc.now();
     auto time_rep = static_cast<chrono::duration<double>>(end - start).count();
+    return time_rep;
+    /*    SparseBoolMatrix check = SparseBoolMatrix::from_dense(check_dense);
 
-    assert(res == check);
+        auto start = sc.now();
+        SparseBoolMatrix res = matrix_mult(a_s, b_s);
+        auto end = sc.now();
+        auto time_rep = static_cast<chrono::duration<double>>(end - start).count();
 
+        assert(res == check);
+    */
     return time_rep;
 }
 
-size_t nb_rep(9);
+size_t nb_rep(2);
 
 /**
  * Generate figures from the paper
@@ -173,7 +177,7 @@ void run_tests(size_t max_size, size_t step)
                 {
                     cout << n << "," << p << "," << i << endl;
 
-                    double time_total = test_mm(n, p / (n * n), rng);
+                    double time_total = test_mm(n, p / (n), rng);
                     outFile << n << "," << p << "," << time_total << endl;
                 }
             }
@@ -192,8 +196,8 @@ int main()
     // mt19937 rng(rd());
     // test_pm_wc_jump(100, rng);
 
-    size_t max_size = 500;
-    size_t step = 100;
+    size_t max_size = 2000;
+    size_t step = 500;
 
     run_tests(max_size, step);
     return 0;
