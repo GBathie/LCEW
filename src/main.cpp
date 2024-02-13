@@ -66,8 +66,7 @@ void run_tests(size_t max_size, size_t step)
 {
     random_device rd;
     mt19937 rng(rd());
-    // for (float p = 0.1; p <= 1; p += 0.1)
-    float p = 40;
+    for (float p = 1; p <= 10; p += 1)
     {
         string name_file = "results_" + to_string(p) + ".csv";
         ofstream outFile;
@@ -81,7 +80,7 @@ void run_tests(size_t max_size, size_t step)
                 {
                     cout << n << "," << p << "," << i << endl;
 
-                    double time_total = test_mm(n, p / (n * n), rng);
+                    double time_total = test_mm(n, p / n, rng);
                     outFile << n << "," << p << "," << time_total << endl;
                 }
             }
@@ -96,7 +95,6 @@ void run_tests(size_t max_size, size_t step)
 
 int main()
 {
-
     size_t max_size = 2000;
     size_t step = 500;
 
