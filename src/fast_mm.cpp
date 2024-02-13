@@ -36,7 +36,12 @@ SparseBoolMatrix matrix_mult(const SparseBoolMatrix &a, const SparseBoolMatrix &
     convert_to_string(txt, a, true);
     convert_to_string(txt, b, false);
     int n = a.n;
-    int t = 10 * n * sqrt((a.entries.size() + b.entries.size()) / n) + 1;
+    // The way that we choose `t` here differs from the paper.
+    // First, we use `m_in` as an upper bounds on G,
+    // we replace `n+m_out` with `n` because we do not have an estimate of `m_out`,
+    // and we add the multiplicative constant `10`
+    // to balance the trade-off between preprocessing and query time beyond the big-O.
+    int t = 50 * n * sqrt((a.entries.size() + b.entries.size()) / n) + 1;
     Lcew ds(txt, t);
 
     SparseBoolMatrix res;
