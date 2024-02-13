@@ -19,11 +19,3 @@ using std::vector;
  * if there is an occurrence of `p` in `t` starting at position `i`.
  */
 vector<bool> pm_wc(const vector<int> &p, const vector<int> &t, const unordered_set<int> &wc);
-
-vector<bool> pm_wc_jump(
-    int p_start, int m,
-    vector<int> &t, unordered_set<int> &wc,
-    vector<int> &next_tr);
-
-void test_pm_wc(int it, std::mt19937 &rng);
-void test_pm_wc_jump(int it, std::mt19937 &rng);

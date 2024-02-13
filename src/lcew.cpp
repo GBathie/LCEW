@@ -44,46 +44,6 @@ vector<vector<int>> compute_jump(vector<int> &t, unordered_set<int> &wc, vector<
     return jump;
 }
 
-vector<vector<int>> compute_jump2(
-    vector<int> &t, unordered_set<int> &wc,
-    vector<int> &selected_pos, vector<int> &next_tr)
-{
-    int n = t.size();
-    int sigma = selected_pos.size();
-
-    auto matches = [&](int i, int j) -> bool
-    {
-        return t[i] == t[j] || wc.contains(t[i]) || wc.contains(t[j]);
-    };
-
-    vector<vector<bool>> occs;
-    for (int i = 0; i < sigma - 1; i++)
-    {
-        int l_p = selected_pos[i + 1] - selected_pos[i] + 1;
-        auto tmp = pm_wc_jump(selected_pos[i], l_p, t, wc, next_tr);
-        occs.push_back(tmp);
-    }
-
-    vector<vector<int>> jump(sigma, vector<int>(n, 0));
-    for (int r = sigma - 2; r >= 0; --r)
-    {
-        for (int j = 0; j < n; ++j)
-        {
-            int lr = selected_pos[r + 1] - selected_pos[r];
-            if (j + lr < n && matches(selected_pos[r], j) && occs[r][j])
-            {
-                jump[r][j] = std::max(0, selected_pos[r + 1] - selected_pos[r] - jump[r + 1][j + lr]);
-            }
-            else
-            {
-                jump[r][j] = 0;
-            }
-        }
-    }
-
-    return jump;
-}
-
 Lcew::Lcew(vector<int> txt, int t, vector<int> wc) : text(txt), sa(txt)
 {
     this->wildcards = unordered_set(wc.begin(), wc.end());
@@ -137,7 +97,6 @@ Lcew::Lcew(vector<int> txt, int t, vector<int> wc) : text(txt), sa(txt)
     }
 
     jump = compute_jump(text, wildcards, selected_pos);
-    // jump = compute_jump2(text, wildcards, selected_pos, next_tr);
 }
 
 int Lcew::next_selected_or_mism(int i, int j) const

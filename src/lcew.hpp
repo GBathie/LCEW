@@ -14,7 +14,7 @@ const char DEFAULT_WILDCARD = '#';
 /**
  * Data structure for efficient longest common extension queries
  * in a text `T` with wildcards (LCEW).
- * 
+ *
  * See our paper [Bathie, Charalampopoulos & Starikovskaya, to appear]
  * for more details.
  */
@@ -32,24 +32,24 @@ private:
 public:
     /**
      * Build the LCEW data structure.
-     * 
+     *
      * Constructs the data structure for the text `txt`, with query time `O(t)`
      * and using symbols in `wc` as wildcards.
-     * 
+     *
      * The parameter `t` must be a positive (> 0) integer.
-     * 
+     *
      * If `wc` is not specified, it defaults to `DEFAULT_WILDCARD` ('#').
      */
     Lcew(vector<int> txt, int t, vector<int> wc = {DEFAULT_WILDCARD});
+
     /**
      * Build the LCEW data structure (string text).
      */
-    Lcew(string &s, int t, vector<int> wc): Lcew(vector<int>(s.begin(), s.end()), t, wc) {};
+    Lcew(string &s, int t, vector<int> wc) : Lcew(vector<int>(s.begin(), s.end()), t, wc){};
 
     /**
      * Get the value of the LCEW between `T[i..]` and `T[j..]`
      */
-    
     int lcew(int i, int j) const;
 
 private:
